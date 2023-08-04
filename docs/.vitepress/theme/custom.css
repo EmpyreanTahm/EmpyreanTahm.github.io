@@ -1,0 +1,18 @@
+@import "https://cdnjs.cloudflare.com/ajax/libs/lxgw-wenkai-webfont/1.7.0/style.css";
+
+body {
+    font-family: "LXGW WenKai", sans-serif;
+}
+
+pre, code {
+    font-family: "LXGW WenKai Mono", sans-serif;
+}
+
+/* medium-zoom 插件配置 */
+.medium-zoom-overlay {
+    z-index: 20;
+}
+
+.medium-zoom-image {
+    z-index: 21;
+}
