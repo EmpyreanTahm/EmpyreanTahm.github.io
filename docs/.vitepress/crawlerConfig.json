@@ -1,5 +1,5 @@
 {
-  "index_name": "chodocs",
+  "index_name": "vitepress-kether-tahm",
   "start_urls": ["https://kether-tahm.4everland.app/"],
   "rateLimit": 8,
   "maxDepth": 10,
