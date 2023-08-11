@@ -1,28 +1,9 @@
 # requestAnimationFrame
 
-在 Web 开发中，我们常常需要使用动画来增强用户体验和交互效果。例如，我们可以使用动画来展示页面的过渡，元素的移动，数据的变化等等。那么，我们应该如何创建动画呢？
-
-传统的方法是使用 setInterval 或 setTimeout 来定时更新动画的状态和渲染。例如，我们可以使用以下代码来创建一个简单的移动方块的动画：
+使用 `setInterval()` 或 `setTimeout()` 完成动画的核心是来定时更新动画的状态和渲染。
 
 ```javascript
-// 获取方块元素
-var box = document.getElementById("box");
-// 设置初始位置
-var x = 0;
-// 设置每秒移动的像素数
-var speed = 100;
-// 设置定时器
-var timer = setInterval(function() {
-  // 更新位置
-  x += speed / 60;
-  // 设置样式
-  box.style.transform = "translateX(" + x + "px)";
-  // 判断是否到达边界
-  if (x >= 300 || x <= 0) {
-    // 反转方向
-    speed = -speed;
-  }
-}, 1000 / 60); // 每秒执行60次
+
 ```
 
 这种方法看起来很简单，但实际上有很多问题。首先，它不能保证动画的流畅性，因为定时器的执行时间和浏览器的渲染时间可能不一致，导致动画出现卡顿或掉帧的现象。其次，它不能保证动画的高效性，因为定时器会一直执行，即使浏览器处于后台或隐藏状态，也会消耗资源和电池寿命。最后，它不能保证动画的灵活性，因为定时器的频率是固定的，不能根据不同的设备和环境进行调整。
@@ -34,32 +15,60 @@ var timer = setInterval(function() {
 requestAnimationFrame 的用法很简单，只需要传入一个回调函数作为参数，就可以让浏览器在下一次重绘之前执行这个回调函数。例如，我们可以使用以下代码来改写上面的移动方块的动画：
 
 ```javascript
-// 获取方块元素
-var box = document.getElementById("box");
-// 设置初始位置
-var x = 0;
-// 设置每秒移动的像素数
-var speed = 100;
-// 定义回调函数
-function animate(timestamp) {
-  // 更新位置
-  x += speed / (1000 / timestamp - lastTimestamp);
-  // 设置样式
-  box.style.transform = "translateX(" + x + "px)";
-  // 判断是否到达边界
-  if (x >= 300 || x <= 0) {
-    // 反转方向
-    speed = -speed;
-  }
-  // 记录上一次执行时间
-  lastTimestamp = timestamp;
-  // 请求下一次动画帧
-  requestAnimationFrame(animate);
-}
-// 记录初始执行时间
-var lastTimestamp = performance.now();
-// 请求第一次动画帧
-requestAnimationFrame(animate);
+    class Point {
+        #DPI = Math.PI * 2
+        #now = 0
+        #interval = 0
+
+        constructor (centerX = 100, centerY = 100, radius = 100, angle = 0, circleCycle = 2000) {
+            this.#initElement()
+            this.centerX = centerX
+            this.centerY = centerY
+            this.radius = radius
+            this.angle = angle
+            this.circleCycle = circleCycle
+        }
+
+        #initElement () {
+            const el = document.createElement('div')
+            el.style.width = '10px'
+            el.style.height = '10px'
+            el.style.borderRadius = '5px'
+            el.style.backgroundColor = 'red'
+            document.body.appendChild(el)
+            this.el = el
+        }
+
+        #computeInterval () {
+            if (!this.#now) {
+                this.now = performance.now()
+            } else {
+                const now = performance.now()
+                const interval = now - this.now
+                this.now = now
+                return interval
+            }
+        }
+
+        circle () {
+            if (this.time) {
+                const now = performance.now()
+                const interval = now - this.time
+                this.time = now
+                const { el, centerX, centerY, radius, angle, circleCycle } = this
+                const x = centerX + radius * Math.cos(angle)
+                const y = centerY + radius * Math.sin(angle)
+                el.style.transform = `translate3d(${x}px, ${y}px, 0)`
+                this.angle = (this.angle + (interval / circleCycle) * this.#DPI) % this.#DPI
+            } else {
+                this.time = performance.now()
+            }
+            setTimeout(() => this.circle(), 1000 / 60)
+        }
+    }
+
+    const instance = new Point()
+    instance.circle()
 ```
 
 这里有几点需要注意：
