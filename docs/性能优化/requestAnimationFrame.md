@@ -3,6 +3,58 @@
 使用 `setInterval()` 或 `setTimeout()` 完成动画的核心是来定时更新动画的状态和渲染。
 
 ```javascript
+class sinTranslate {
+    #x
+    #y
+    #angle
+    #dx
+    #dy
+    #period
+    #amplitude
+    #el
+
+    constructor (dx = 5, dy = 100, period = 360, amplitude = 50) {
+        this.#x = 0
+        this.#y = 0
+        this.#angle = 0
+        this.#dx = dx
+        this.#dy = dy
+        this.#period = period
+        this.#amplitude = amplitude
+        this.#initElement()
+        this.#animate()
+    }
+
+    #initElement () {
+        const el = document.createElement('div')
+        el.style.width = '10px'
+        el.style.height = '10px'
+        el.style.borderRadius = '50%'
+        el.style.background = 'red'
+        this.#el = el
+        document.body.appendChild(el)
+    }
+
+    #animate () {
+        if (this.#x > 1000) {
+            return
+        }
+        // 更新位置和角度
+        this.#x += this.#dx
+        this.#y = this.#dy + this.#amplitude * Math.sin(this.#angle * Math.PI / 180)
+        this.#angle = (this.#angle + this.#dx) % this.#period
+
+        // 使用 translate3d 设置元素的 transform 属性
+        console.log(this.#el)
+        this.#el.style.transform = 'translate3d(' + this.#x + 'px, ' + this.#y + 'px, 0)'
+        // 使用 requestAnimationFrame 请求下一帧动画
+        requestAnimationFrame(() => {
+            this.#animate()
+        })
+    }
+}
+
+new sinTranslate()
 
 ```
 
