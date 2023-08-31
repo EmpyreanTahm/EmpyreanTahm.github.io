@@ -15,60 +15,76 @@
 requestAnimationFrame 的用法很简单，只需要传入一个回调函数作为参数，就可以让浏览器在下一次重绘之前执行这个回调函数。例如，我们可以使用以下代码来改写上面的移动方块的动画：
 
 ```javascript
-    class Point {
-        #DPI = Math.PI * 2
-        #now = 0
-        #interval = 0
+class Planet {
+    constructor (name, color, orbitCenter, radius, orbitalRadius, orbitalPeriod) {
+        this.name = name
+        this.color = color
+        this.orbitCenter = orbitCenter
+        this.radius = radius
+        this.orbitalRadius = orbitalRadius
+        this.orbitalPeriod = orbitalPeriod
+        this.angle = 0
+        this.#setInstantPosition()
+        this.#initElement()
+        this.#orbit()
+    }
 
-        constructor (centerX = 100, centerY = 100, radius = 100, angle = 0, circleCycle = 2000) {
-            this.#initElement()
-            this.centerX = centerX
-            this.centerY = centerY
-            this.radius = radius
-            this.angle = angle
-            this.circleCycle = circleCycle
-        }
-
-        #initElement () {
-            const el = document.createElement('div')
-            el.style.width = '10px'
-            el.style.height = '10px'
-            el.style.borderRadius = '5px'
-            el.style.backgroundColor = 'red'
-            document.body.appendChild(el)
-            this.el = el
-        }
-
-        #computeInterval () {
-            if (!this.#now) {
-                this.now = performance.now()
-            } else {
-                const now = performance.now()
-                const interval = now - this.now
-                this.now = now
-                return interval
-            }
-        }
-
-        circle () {
-            if (this.time) {
-                const now = performance.now()
-                const interval = now - this.time
-                this.time = now
-                const { el, centerX, centerY, radius, angle, circleCycle } = this
-                const x = centerX + radius * Math.cos(angle)
-                const y = centerY + radius * Math.sin(angle)
-                el.style.transform = `translate3d(${x}px, ${y}px, 0)`
-                this.angle = (this.angle + (interval / circleCycle) * this.#DPI) % this.#DPI
-            } else {
-                this.time = performance.now()
-            }
-            setTimeout(() => this.circle(), 1000 / 60)
+    #setInstantPosition () {
+        const { orbitCenter, orbitalRadius, radius } = this
+        if (orbitCenter instanceof Planet) {
+            this.left = orbitCenter.left + Math.cos(this.angle) * orbitalRadius + orbitCenter.radius - radius
+            this.top = orbitCenter.top - Math.sin(this.angle) * orbitalRadius + orbitCenter.radius - radius
+        } else {
+            this.left = orbitCenter.left
+            this.top = orbitCenter.top
         }
     }
 
-    const instance = new Point()
-    instance.circle()
+    #initElement () {
+        const size = this.radius * 2
+        const element = document.createElement('div')
+        element.style.position = 'absolute'
+        element.style.width = size + 'px'
+        element.style.height = size + 'px'
+        element.style.borderRadius = '50%'
+        element.style.backgroundColor = this.color
+        element.style.left = `${this.left}px`
+        element.style.top = `${this.top}px`
+        this.element = element
+        document.body.append(element)
+    }
+
+    #updateAngle () {
+        if (!this.now) {
+            this.now = performance.now()
+            return
+        }
+        const now = performance.now()
+        this.now = now
+        this.angle += 360 * (now - this.now) / (this.orbitalPeriod * 1000)
+    }
+
+    #orbit () {
+        if (this.orbitCenter instanceof Planet) {
+            this.#updateAngle()
+            this.#setInstantPosition()
+            this.element.style.left = this.left + 'px'
+            this.element.style.top = this.top + 'px'
+            this.angle += (360 / (this.orbitalPeriod * 1000)) % 360
+            // setTimeout(() => {
+            //     this.#orbit()
+            // }, 1000 / 60)
+            requestAnimationFrame(() => {
+                this.#orbit()
+            })
+        }
+    }
+}
+
+const sun = new Planet('SUN', 'red', { left: 400, top: 400 }, 50)
+const earth = new Planet('EARTH', 'blue', sun, 20, 120, 20)
+new Planet('MOON', 'green', earth, 10, 40, 10)
+
 ```
 
 这里有几点需要注意：
