@@ -4,23 +4,16 @@
 
 ```javascript
 class sinTranslate {
-    #x
-    #y
-    #angle
-    #dx
-    #dy
-    #period
-    #amplitude
-    #el
+    #x = 0
+    #y = 0
+    #angle = 0
+    #dx = 1
+    #dy = 100
+    #period = 360
+    #amplitude = 50
+    #el = null
 
-    constructor (dx = 5, dy = 100, period = 360, amplitude = 50) {
-        this.#x = 0
-        this.#y = 0
-        this.#angle = 0
-        this.#dx = dx
-        this.#dy = dy
-        this.#period = period
-        this.#amplitude = amplitude
+    constructor () {
         this.#initElement()
         this.#animate()
     }
@@ -36,7 +29,7 @@ class sinTranslate {
     }
 
     #animate () {
-        if (this.#x > 1000) {
+        if (this.#x > 1400) {
             return
         }
         // 更新位置和角度
@@ -45,8 +38,18 @@ class sinTranslate {
         this.#angle = (this.#angle + this.#dx) % this.#period
 
         // 使用 translate3d 设置元素的 transform 属性
-        console.log(this.#el)
         this.#el.style.transform = 'translate3d(' + this.#x + 'px, ' + this.#y + 'px, 0)'
+        const el = document.createElement('div')
+        el.style.width = '10px'
+        el.style.height = '10px'
+        el.style.position = 'absolute'
+        el.style.left = this.#el.getBoundingClientRect().left + 'px'
+        el.style.top = this.#el.getBoundingClientRect().top + 'px'
+        // el.style.borderRadius = '50%'
+        el.style.background = 'silver'
+        setTimeout(() => {
+            document.body.appendChild(el)
+        }, 200)
         // 使用 requestAnimationFrame 请求下一帧动画
         requestAnimationFrame(() => {
             this.#animate()
