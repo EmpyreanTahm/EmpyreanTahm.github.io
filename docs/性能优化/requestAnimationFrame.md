@@ -2,65 +2,6 @@
 
 使用 `setInterval()` 或 `setTimeout()` 完成动画的核心是来定时更新动画的状态和渲染。
 
-```javascript
-class sinTranslate {
-    #x = 0
-    #y = 0
-    #angle = 0
-    #dx = 1
-    #dy = 100
-    #period = 360
-    #amplitude = 50
-    #el = null
-
-    constructor () {
-        this.#initElement()
-        this.#animate()
-    }
-
-    #initElement () {
-        const el = document.createElement('div')
-        el.style.width = '10px'
-        el.style.height = '10px'
-        el.style.borderRadius = '50%'
-        el.style.background = 'red'
-        this.#el = el
-        document.body.appendChild(el)
-    }
-
-    #animate () {
-        if (this.#x > 1400) {
-            return
-        }
-        // 更新位置和角度
-        this.#x += this.#dx
-        this.#y = this.#dy + this.#amplitude * Math.sin(this.#angle * Math.PI / 180)
-        this.#angle = (this.#angle + this.#dx) % this.#period
-
-        // 使用 translate3d 设置元素的 transform 属性
-        this.#el.style.transform = 'translate3d(' + this.#x + 'px, ' + this.#y + 'px, 0)'
-        const el = document.createElement('div')
-        el.style.width = '10px'
-        el.style.height = '10px'
-        el.style.position = 'absolute'
-        el.style.left = this.#el.getBoundingClientRect().left + 'px'
-        el.style.top = this.#el.getBoundingClientRect().top + 'px'
-        // el.style.borderRadius = '50%'
-        el.style.background = 'silver'
-        setTimeout(() => {
-            document.body.appendChild(el)
-        }, 200)
-        // 使用 requestAnimationFrame 请求下一帧动画
-        requestAnimationFrame(() => {
-            this.#animate()
-        })
-    }
-}
-
-new sinTranslate()
-
-```
-
 这种方法看起来很简单，但实际上有很多问题。首先，它不能保证动画的流畅性，因为定时器的执行时间和浏览器的渲染时间可能不一致，导致动画出现卡顿或掉帧的现象。其次，它不能保证动画的高效性，因为定时器会一直执行，即使浏览器处于后台或隐藏状态，也会消耗资源和电池寿命。最后，它不能保证动画的灵活性，因为定时器的频率是固定的，不能根据不同的设备和环境进行调整。
 
 为了解决这些问题，HTML5 提供了一个新的方法：requestAnimationFrame。这个方法可以让浏览器在合适的时间来执行动画的回调函数，从而实现流畅和高效的动画效果。
@@ -69,78 +10,7 @@ new sinTranslate()
 
 requestAnimationFrame 的用法很简单，只需要传入一个回调函数作为参数，就可以让浏览器在下一次重绘之前执行这个回调函数。例如，我们可以使用以下代码来改写上面的移动方块的动画：
 
-```javascript
-class Planet {
-    constructor (name, color, orbitCenter, radius, orbitalRadius, orbitalPeriod) {
-        this.name = name
-        this.color = color
-        this.orbitCenter = orbitCenter
-        this.radius = radius
-        this.orbitalRadius = orbitalRadius
-        this.orbitalPeriod = orbitalPeriod
-        this.angle = 0
-        this.#setInstantPosition()
-        this.#initElement()
-        this.#orbit()
-    }
 
-    #setInstantPosition () {
-        const { orbitCenter, orbitalRadius, radius } = this
-        if (orbitCenter instanceof Planet) {
-            this.left = orbitCenter.left + Math.cos(this.angle) * orbitalRadius + orbitCenter.radius - radius
-            this.top = orbitCenter.top - Math.sin(this.angle) * orbitalRadius + orbitCenter.radius - radius
-        } else {
-            this.left = orbitCenter.left
-            this.top = orbitCenter.top
-        }
-    }
-
-    #initElement () {
-        const size = this.radius * 2
-        const element = document.createElement('div')
-        element.style.position = 'absolute'
-        element.style.width = size + 'px'
-        element.style.height = size + 'px'
-        element.style.borderRadius = '50%'
-        element.style.backgroundColor = this.color
-        element.style.left = `${this.left}px`
-        element.style.top = `${this.top}px`
-        this.element = element
-        document.body.append(element)
-    }
-
-    #updateAngle () {
-        if (!this.now) {
-            this.now = performance.now()
-            return
-        }
-        const now = performance.now()
-        this.now = now
-        this.angle += 360 * (now - this.now) / (this.orbitalPeriod * 1000)
-    }
-
-    #orbit () {
-        if (this.orbitCenter instanceof Planet) {
-            this.#updateAngle()
-            this.#setInstantPosition()
-            this.element.style.left = this.left + 'px'
-            this.element.style.top = this.top + 'px'
-            this.angle += (360 / (this.orbitalPeriod * 1000)) % 360
-            // setTimeout(() => {
-            //     this.#orbit()
-            // }, 1000 / 60)
-            requestAnimationFrame(() => {
-                this.#orbit()
-            })
-        }
-    }
-}
-
-const sun = new Planet('SUN', 'red', { left: 400, top: 400 }, 50)
-const earth = new Planet('EARTH', 'blue', sun, 20, 120, 20)
-new Planet('MOON', 'green', earth, 10, 40, 10)
-
-```
 
 这里有几点需要注意：
 
