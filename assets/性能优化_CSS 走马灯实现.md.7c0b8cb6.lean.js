@@ -1,0 +1,1 @@
+import{_ as e,o as t,c as a}from"./chunks/framework.1f725d55.js";const m=JSON.parse('{"title":"","description":"","frontmatter":{},"headers":[],"relativePath":"性能优化/CSS 走马灯实现.md","filePath":"性能优化/CSS 走马灯实现.md","lastUpdated":1698052156000}'),r={name:"性能优化/CSS 走马灯实现.md"};function o(s,_,c,n,d,p){return t(),a("div")}const S=e(r,[["render",o]]);export{m as __pageData,S as default};
