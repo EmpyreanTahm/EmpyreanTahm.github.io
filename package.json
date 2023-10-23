@@ -16,6 +16,7 @@
     "docs:deploy": "sh deploy.sh"
   },
   "dependencies": {
+    "echarts": "^5.4.3",
     "medium-zoom": "^1.0.8"
   }
 }
