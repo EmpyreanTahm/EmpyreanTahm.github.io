@@ -2,7 +2,7 @@ import DefaultTheme from 'vitepress/theme'
 import { onMounted, watch, nextTick } from 'vue'
 import { useRoute } from 'vitepress'
 import mediumZoom from 'medium-zoom'
-import './custom.css'
+import './custom.less'
 
 export default {
     ...DefaultTheme,

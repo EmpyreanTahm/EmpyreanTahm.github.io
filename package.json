@@ -6,6 +6,7 @@
   "license": "MIT",
   "devDependencies": {
     "flexsearch": "^0.7.31",
+    "less": "^4.2.0",
     "vitepress": "^1.0.0-rc.23",
     "vitepress-plugin-search": "^1.0.4-alpha.20"
   },

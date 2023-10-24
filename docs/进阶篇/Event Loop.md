@@ -10,6 +10,7 @@ const gaugeData = ref([
   ])
 </script>
 
+![Node-eventloop-order](/Node-eventloop-order.png)
 ## 基本使用
 
 <GaugeChart :gaugeData="gaugeData" :height="500" />
