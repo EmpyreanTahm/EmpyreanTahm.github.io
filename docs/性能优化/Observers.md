@@ -1,0 +1,1 @@
+IntersectionObserver、MutationObserver、ResizeObserver、PerformanceObserver

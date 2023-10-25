@@ -15,17 +15,25 @@ export default {
             { text: '💯性能优化', link: '/性能优化/requestAnimationFrame' }
         ],
         sidebar: {
-            '/进阶篇/': [{
-                'items': [
-                    { 'text': 'Event Loop', 'link': '/进阶篇/Event Loop' },
-                    { 'text': '浅谈 GC', 'link': '/进阶篇/浅谈 GC' }
+            '/进阶篇/': {
+                items: []
+            },
+            '/性能优化/': {
+                items: [
+                    {
+                        text: 'API',
+                        collapsed: true,
+                        items: [
+                            { 'text': 'Event Loop', 'link': '/性能优化/Event Loop' },
+                            { 'text': '浅谈 GC', 'link': '/性能优化/浅谈 GC' },
+                            { 'text': 'requestAnimationFrame', 'link': '/性能优化/requestAnimationFrame' },
+                            { 'text': 'requestIdleCallback', 'link': '/性能优化/requestIdleCallback' },
+                            { 'text': 'DocumentFragment', 'link': '/性能优化/DocumentFragment' },
+                            { 'text': 'Observers', 'link': '/性能优化/Observers' }
+                        ]
+                    }
                 ]
-            }],
-            '/性能优化/': [{
-                'items': [
-                    { 'text': 'requestAnimationFrame', 'link': '/性能优化/requestAnimationFrame' }
-                ]
-            }]
+            }
         }
     }
 }
